@@ -6,14 +6,14 @@ export const NavBar = () => {
   return (
     <nav className="border-gray-200 bg-white dark:bg-gray-900">
       <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
-        <a href="https://flowbite.com/" className="flex items-center">
+        <a href="http://zackhanley.dev/" className="flex items-center">
           <img
-            src="https://flowbite.com/docs/images/logo.svg"
+            src="https://www.svgrepo.com/show/387748/handle-z.svg"
             className="mr-3 h-8"
             alt="Flowbite Logo"
           />
           <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
-            Flowbite
+            zbay
           </span>
         </a>
         <button

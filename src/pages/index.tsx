@@ -6,6 +6,8 @@ import { useUser } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
+  const listings = api.listings.getAll.useQuery();
+  console.log(listings.data);
   const user = useUser();
 
   return (
@@ -17,7 +19,56 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-slate-800 to-[#15162c]">
-        <h1 className="text-white">Home</h1>
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400">
+            <caption className="bg-white p-5 text-left text-lg font-semibold text-gray-900 dark:bg-gray-800 dark:text-white">
+              All Listings
+              <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                Browse all available listings.
+              </p>
+            </caption>
+            <thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Product name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Description
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Price
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  <span className="sr-only">Edit</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {listings.data?.map((listing) => {
+                return (
+                  <tr className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-600">
+                    <th
+                      scope="row"
+                      className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
+                    >
+                      {listing.name}
+                    </th>
+                    <td className="px-6 py-4">{listing.description}</td>
+                    <td className="px-6 py-4">{listing.price}</td>
+                    <td className="px-6 py-4 text-right">
+                      <Link
+                        href={`/listings/${listing.id}`}
+                        className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+                      >
+                        View
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </main>
     </>
   );
