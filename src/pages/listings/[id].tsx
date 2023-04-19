@@ -3,12 +3,17 @@ import Head from "next/head";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
+import { useForm } from "react-hook-form";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 
+type MessageForm = { content: string; listingId: string };
+
 const ListingView: NextPage = () => {
   const router = useRouter();
+  const user = useUser();
 
+  const sendMessage = api.message.newMessage.useMutation();
   const listing = api.listings.get.useQuery(
     {
       listingId: router.query.id as string,
@@ -18,6 +23,7 @@ const ListingView: NextPage = () => {
     }
   );
 
+  const { register, handleSubmit, reset } = useForm<MessageForm>();
   const item = listing.data;
 
   return (
@@ -41,25 +47,42 @@ const ListingView: NextPage = () => {
           <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
             ${item?.price}
           </p>
-          <a
-            href="#"
-            className="inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Read more
-            <svg
-              aria-hidden="true"
-              className="-mr-1 ml-2 h-4 w-4"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-          </a>
+          {user.isSignedIn && (
+            <>
+              <form
+                className="flex flex-col gap-6"
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onSubmit={handleSubmit((formData: MessageForm) =>
+                  sendMessage
+                    .mutateAsync({
+                      content: formData.content,
+                      listingId: item?.id,
+                    })
+                    .then(() => reset())
+                )}
+              >
+                <div>
+                  <label
+                    htmlFor="content"
+                    className="mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Message seller about {item?.name}
+                  </label>
+                  <textarea
+                    id="content"
+                    className="block w-full rounded-lg border border-gray-900"
+                    {...register("content", { required: true })}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="mb-2 mr-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800"
+                >
+                  Submit
+                </button>
+              </form>
+            </>
+          )}
         </div>
       </main>
     </>
