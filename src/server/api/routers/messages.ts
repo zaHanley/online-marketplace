@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 export const messagesRouter = createTRPCRouter({
   newMessage: protectedProcedure
@@ -22,4 +26,16 @@ export const messagesRouter = createTRPCRouter({
       });
       return message;
     }),
+  getAllByUser: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.auth.userId;
+    const listings = await ctx.prisma.listing.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        Message: true,
+      },
+    });
+    return listings.flatMap((item) => item.Message);
+  }),
 });

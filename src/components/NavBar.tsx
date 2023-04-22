@@ -46,17 +46,29 @@ export const NavBar = () => {
                 className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white dark:text-white md:bg-transparent md:p-0 md:text-blue-700 md:dark:text-blue-500"
                 aria-current="page"
               >
-                Home
+                Browse
               </Link>
             </li>
             {user.isSignedIn && (
               <li>
                 <Link
-                  href="sell"
+                  href="/sell"
                   className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white dark:text-white md:bg-transparent md:p-0 md:text-blue-700 md:dark:text-blue-500"
                   aria-current="page"
                 >
                   Sell
+                </Link>
+              </li>
+            )}
+
+            {user.isSignedIn && (
+              <li>
+                <Link
+                  href="/messages"
+                  className="block rounded bg-blue-700 py-2 pl-3 pr-4 text-white dark:text-white md:bg-transparent md:p-0 md:text-blue-700 md:dark:text-blue-500"
+                  aria-current="page"
+                >
+                  Messages
                 </Link>
               </li>
             )}
