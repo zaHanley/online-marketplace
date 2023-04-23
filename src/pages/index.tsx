@@ -8,7 +8,6 @@ import { api } from "~/utils/api";
 const Home: NextPage = () => {
   const listings = api.listings.getAll.useQuery();
   console.log(listings.data);
-  const user = useUser();
 
   return (
     <>

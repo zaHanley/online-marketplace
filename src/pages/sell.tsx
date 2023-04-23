@@ -1,7 +1,5 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
 
 import { api } from "~/utils/api";
 import { useForm } from "react-hook-form";
@@ -14,9 +12,14 @@ const Sell: NextPage = () => {
   const router = useRouter();
   const { register, handleSubmit } = useForm<SellItemForm>();
   const onSubmit = (formData: SellItemForm) => {
-    createListing.mutateAsync(formData).then(() => {
-      router.push("/");
-    });
+    createListing.mutateAsync(formData).then(
+      () => {
+        router.push("/");
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   };
 
   return (

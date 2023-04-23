@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 
 import { useForm } from "react-hook-form";
@@ -56,7 +55,7 @@ const ListingView: NextPage = () => {
                   sendMessage
                     .mutateAsync({
                       content: formData.content,
-                      listingId: item?.id,
+                      listingId: item?.id!,
                     })
                     .then(() => reset())
                 )}

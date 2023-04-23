@@ -7,6 +7,9 @@ import {
 } from "~/server/api/trpc";
 
 export const listingsRouter = createTRPCRouter({
+  getAll: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.listing.findMany();
+  }),
   create: protectedProcedure
     .input(
       z.object({
@@ -22,10 +25,8 @@ export const listingsRouter = createTRPCRouter({
           userId: ctx.auth.userId,
         },
       });
+      return listing;
     }),
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.listing.findMany();
-  }),
 
   get: publicProcedure
     .input(z.object({ listingId: z.string() }))
